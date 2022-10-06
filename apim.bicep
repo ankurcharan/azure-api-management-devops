@@ -22,3 +22,33 @@ module apiManagementService 'modules/apiManagement.bicep' = {
 		virtualNetworkType: 'External'
 	}
 }
+
+
+@description('Optional. Array of API specification and details')
+param apiInformation array = [
+	{
+    apiName: 'json-placeholder'
+		apiDisplayName: 'JsonPlaceholder'
+		specificationFormat: 'openapi+json'
+		suffix: '/jp'
+    serviceUrl: 'https://jsonplaceholder.typicode.com/'
+		apiSpecContent: loadTextContent('api-spec/jsonplaceholder.json')
+	}
+]
+
+
+module apisDeploy 'modules/apiManagement.api.bicep' = [for (config, i) in apiInformation: {
+	name: '${i}-${config.apiName}-import-${apiManagementServiceName}'
+	params: {
+		apiSpecification: config.apiSpecContent
+		apiServiceUrl: config.serviceUrl
+		apiServiceDisplayName: config.apiDisplayName
+		apiServiceName: config.apiName
+		suffix: config.suffix
+		apiManagementServiceName: apiManagementServiceName
+		specificationFormat: config.specificationFormat
+	}
+	dependsOn: [
+		apiManagementService
+	]
+}]
