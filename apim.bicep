@@ -33,7 +33,8 @@ param apiInformation array = [
 		suffix: '/jp'
     serviceUrl: 'https://jsonplaceholder.typicode.com/'
 		apiSpecContent: loadTextContent('api-spec/jsonplaceholder.json')
-	}
+    policyContents: loadTextContent('policies/apiPolicy-jsonplaceholder.xml')	
+  }
 ]
 
 
@@ -50,5 +51,17 @@ module apisDeploy 'modules/apiManagement.api.bicep' = [for (config, i) in apiInf
 	}
 	dependsOn: [
 		apiManagementService
+	]
+}]
+
+module apiPolicyDeploy 'modules/apiManagement.api.policy.bicep' = [for (config, i) in apiInformation: {
+	name: '${i}-${config.apiName}-policy'
+	params: {
+		apiManagementServiceName: apiManagementServiceName
+		apiServiceName: config.apiName
+		policyXML: config.policyContents
+	}
+	dependsOn: [
+		apisDeploy
 	]
 }]
