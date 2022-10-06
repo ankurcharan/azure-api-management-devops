@@ -57,7 +57,16 @@ resource apiManagementService 'Microsoft.ApiManagement/service@2021-08-01' = {
   }
 }
 
-output name string = apiManagementInstanceName
-
+output name string = apiManagementService.name
 output resourceId string = apiManagementService.id
 output apimGatewayUrl string = apiManagementService.properties.gatewayUrl
+
+
+resource globalPolicy 'Microsoft.ApiManagement/service/policies@2021-12-01-preview' = {
+  name: 'policy'
+  parent: apiManagementService
+  properties: {
+    value: loadTextContent('../policies/global-policy.xml')
+    format: 'rawxml'
+  }
+}
