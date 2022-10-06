@@ -1,0 +1,12 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "apiManagementServiceName": {
+      "value": "apim-ankur"
+    },
+    "subnetResourceId": {
+      "value": "/subscriptions/430f154f-20fa-4ca8-b1eb-94aa487e135e/resourceGroups/api-devops/providers/Microsoft.Network/virtualNetworks/vnet/subnets/apim-subnet"
+    }
+  }
+}
